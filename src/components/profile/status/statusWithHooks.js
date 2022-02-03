@@ -5,8 +5,7 @@ import {getIsMyPage, getUserStatus} from '../../../redux/profile-selectors';
 import {validateTextFieldCreator} from '../../common/validators';
 import {applyNewStatus} from '../../../redux/profile-reducer';
 import {stopChangingOnEscape} from '../../common/helpers';
-import CustomButton from '../../common/buttons/submit/custom-button';
-import TwoButtons from '../../common/buttons/two-buttons';
+import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
 
 import s from './Status.module.sass';
 
@@ -30,6 +29,10 @@ const ProfileStatus = React.memo(({status, isMyPage, applyNewStatus, setResponse
         setStatusBody(target.value);
     }
 
+    const handleClickAway = () => {
+        setEditMode(false);
+      };
+
     const onSetNewStatus = (event) => {
         event.preventDefault();
 
@@ -42,26 +45,43 @@ const ProfileStatus = React.memo(({status, isMyPage, applyNewStatus, setResponse
         } else alert(error);
     }
 
-        const onCancelChange = () => {
-            setStatusBody(status);
-            setEditMode(false)
+    const InputProps = {
+        sx: {
+            m: 0,
+            p: '.5rem 1rem',
+            fontSize: 'inherit',
         }
+    }
 
-        return <form className={s.statusForm} onSubmit={onSetNewStatus}>
-                {editMode ? <> <input className={s.statusInput}
+    return (
+        // <form className={s.statusForm} onSubmit={onSetNewStatus}>
+        <Box component='form' onSubmit={onSetNewStatus}>
+                {
+                editMode
+                ?  <Box mr='200px'>
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <TextField
                             autoFocus
+                            fullWidth
+                            multiline
                             name='status'
                             id='status'
                             value={statusBody}
                             onKeyDown={(e) => stopChangingOnEscape(e, editMode, setEditMode)}
-                            onChange={onChangeInput} ></input>
-                        <TwoButtons wrapClassName={s.wrapperStyle} onCancel={onCancelChange}/></>
-                    : <><div className={s.statusField}
-                            onDoubleClick={onClickEditMode}>{status ? status : 'User has no status'}</div>
-                        {isMyPage && <CustomButton wrapClassName={s.wrapperStyle} type='button'
-                            callbackOnClick={() => setEditMode(true)}>Change status</CustomButton>}
-                </>}
-        </form>
+                            onChange={onChangeInput}
+                            InputProps={InputProps}
+                        />
+                    </ClickAwayListener>
+                </Box>
+                : <Typography
+                    variant='body2'
+                    onDoubleClick={onClickEditMode}
+                >
+                    {status ? status : 'User has no status'}
+                </Typography>
+                }
+        </Box>
+    )
 });
 
 const mapStateToProps = (state) => ({

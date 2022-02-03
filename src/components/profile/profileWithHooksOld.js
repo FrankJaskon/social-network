@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react';
 import MyPosts from './my-posts';
 import User from './user';
-import {compose} from 'redux';
-import {connect} from 'react-redux';
-import {Redirect, withRouter} from 'react-router';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import HOC from '../common/hoc';
-import {getIsAuth, getMyId} from '../../redux/auth-selectors';
-import {setResponseWarning} from '../../redux/app-reducer';
-import {getResponseWarning} from '../../redux/app-selectors';
-import {getIsMyPage, getIsPageLoaded, getLoadingError,
-    getProfile, getIsSuccessResponse} from '../../redux/profile-selectors';
-import {setIsSuccessResponse, addPost, showUserPage, setLoadingError,
-    saveUserInfoFormData, saveNewUserPhoto} from '../../redux/profile-reducer';
+import { getIsAuth, getMyId } from '../../redux/auth-selectors';
+import { setResponseWarning } from '../../redux/app-reducer';
+import { getResponseWarning } from '../../redux/app-selectors';
+import { getIsMyPage, getIsPageLoaded, getLoadingError,
+    getProfile, getIsSuccessResponse } from '../../redux/profile-selectors';
+import { setIsSuccessResponse, addPost, showUserPage, setLoadingError,
+    saveUserInfoFormData, saveNewUserPhoto } from '../../redux/profile-reducer';
 // import ProfileImg from './profile-img';
+import Preloader from '../common/preloader';
+import { useParams } from 'react-router-dom';
 
 import s from './Profile.module.sass';
-import Preloader from '../common/preloader';
+import { redirectToAuth } from '../common/hoc/newHoc';
 
 const Profile = ({setIsSuccessResponse,
     isSuccessResponse, saveNewUserPhoto, responseWarning,
@@ -23,7 +24,9 @@ const Profile = ({setIsSuccessResponse,
     placeholderText, aboutMe, contacts, lookingForAJob,
     lookingForAJobDescription, fullName, userId, photos: {large}},
     addPost, isAuth, isLoaded, isMyPage, showUserPage,
-    saveUserInfoFormData, id, match: {params: {userId : urlId}}}) => {
+    saveUserInfoFormData, id}) => {
+
+    const { userId : urlId } = useParams();
 
     const pageId = urlId ? urlId : id;
 
@@ -32,7 +35,6 @@ const Profile = ({setIsSuccessResponse,
         return () => setResponseWarning('');
     }, [pageId, showUserPage, setResponseWarning]);
 
-    if (!pageId) return <Redirect to='/login' />;
     return  <div className={s.profile__wrapper}>
         {!isLoaded
             ? <Preloader />
@@ -81,8 +83,8 @@ const mapStateToProps = (state) => ({
 export default compose(
     connect(mapStateToProps, {setIsSuccessResponse, addPost, showUserPage, setLoadingError,
         saveUserInfoFormData, setResponseWarning, saveNewUserPhoto}),
-    withRouter,
-    HOC.showPageErrorWrapperComponent
+    HOC.showPageErrorWrapperComponent,
+    redirectToAuth,
 )(Profile);
 
 // setLoadingError is only used for HOC.showPageErrorWrapperComponent

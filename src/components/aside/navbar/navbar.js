@@ -9,7 +9,6 @@ const Navbar = ({navbar, onClickMenuItem, userId}) => {
         <li key={page.id} className={s['nav-list__item']}>
             <NavLink to={`${page.url}`}
                 className={s['nav-list__link']}
-                activeClassName={s.active_link}
                 onClick={() => onClickMenuItem()} >
                 {page.title}
             </NavLink>
@@ -19,7 +18,6 @@ const Navbar = ({navbar, onClickMenuItem, userId}) => {
         <li key={'visitMe'} className={s['nav-list__item']}>
             <NavLink to='/profile/20088'
                 className={s['nav-list__link']}
-                activeClassName={s.active_link}
                 onClick={() => onClickMenuItem()} >
                 Visit me
             </NavLink>

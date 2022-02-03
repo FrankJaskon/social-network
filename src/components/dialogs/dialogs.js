@@ -1,9 +1,22 @@
 import React from 'react';
-import DialogMessages from './messages';
+import { Box, Container, Divider, Stack, Typography } from '@mui/material';
+import BreadcrumbsWithHomeIcon from '../common/breadcrumb';
+import { styled, alpha } from '@mui/material/styles';
 import DialogItem from './dialog-item';
-import {Route} from 'react-router-dom';
+import CollapsedMessage from './messages/message/collapsed-message';
 
-import s from './Dialogs.module.sass';
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    padding: '1rem 3rem',
+    borderRadius: '5px',
+}));
+
+const ScrolledStack = styled(Stack)(({ theme }) => ({
+    overflow: 'auto',
+    maxHeight: 'calc(100vh - 200px)',
+}));
+
 
 const Dialogs = ({dialogs, addMessage}) => {
 
@@ -12,23 +25,63 @@ const Dialogs = ({dialogs, addMessage}) => {
     const dialogsList = dialogsData.map(d => <DialogItem key={d.id} name={d.name} id={d.id}/>);
 
     return (
-        <div className={s.dialogs}>
-            <h3 className={s.dialogs__title}>
-                    Dialogs
-            </h3>
-            <ul className={s.dialogs__wrapper}>
-                {dialogsList}
-            </ul>
-            <div className={s.dialog__messages}>
+        <Container>
+            <Container sx={{ mb: 2 }}>
+                <BreadcrumbsWithHomeIcon
+                    sx={{
+                        flexGrow: 1,
+                        '&:hover': { color: 'primary.dark' },
+                        height: '39px',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                />
+            </Container>
+            <StyledBox>
+                <ScrolledStack sx={{ width: '300px', mr: 4 }} spacing={1}>
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                   {dialogsList}
+                </ScrolledStack>
+                <ScrolledStack sx={{ flexGrow: 1 }}>
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                   <CollapsedMessage />
+                </ScrolledStack>
+            </StyledBox>
+            {/* <div className={s.dialog__messages}>
                 <div className={s.messages}>
+                <Routes>
                     <Route
                         path={`/dialogs/dialog/0`}
-                        render={() => <DialogMessages
+                        element={() => <DialogMessages
                             dialogs={dialogs}
                             addMessage={addMessage} />} />
+                </Routes>
                 </div>
-            </div>
-        </div>
+            </div> */}
+        </Container>
     )
 }
 export default Dialogs;

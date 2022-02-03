@@ -1,4 +1,4 @@
-import {createSelector} from 'reselect';
+import { createSelector } from 'reselect';
 import {getMyId} from './auth-selectors';
 
 export const getProfile = ({profile}) => {

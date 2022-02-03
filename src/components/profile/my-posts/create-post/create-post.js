@@ -1,12 +1,15 @@
 import React from 'react';
-import CustomButton from '../../../common/buttons/submit/custom-button';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
-// import {validateTextFieldCreator} from '../../../common/validators';
+import { Formik } from 'formik';
+import { styled, alpha } from '@mui/material/styles';
+import { Button, Divider, Stack, TextField } from '@mui/material';
 
 import s from './CreatePost.module.sass';
-import DivWrapper from '../../../common/finished-components/div-wrapper';
 
-// const validateTextField = validateTextFieldCreator(200);
+const StyledStack = styled(Stack)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: '3rem',
+    borderRadius: '5px',
+}));
 
 const CreatePost = React.memo(({userId, isAuth, isMyPage, placeholderText, addPost}) => {
 
@@ -24,32 +27,33 @@ const CreatePost = React.memo(({userId, isAuth, isMyPage, placeholderText, addPo
                 errors,
                 touched,
                 handleChange,
-                handleSubmit}) => <DivWrapper>
-                    <Form className={s['create-post']} onSubmit={handleSubmit} >
-                        <h3 className={s['create-post__title title']}>
-                            {isMyPage ? 'Create new post' : 'Send post'}
-                        </h3>
-                        <div className={s['create-post__input_wrap']}
-                            style={errors.newPostBody && touched.newPostBody ? {border: '2px solid #ff0000'} : {}} >
-                            <Field
-                                // validate={validateTextField}
-                                className={s['create-post__input']}
-                                type='text'
-                                placeholder={isAuth ? placeholderText : 'You cannot post any comments if you are not logged in.'}
+                handleSubmit}) => (
+                        <StyledStack component='form' onSubmit={handleSubmit} spacing={2}>
+                            <TextField
+                                multiline
+                                placeholder={
+                                    isAuth
+                                    ? placeholderText
+                                    : 'You cannot post any comments if you are not logged in.'
+                                }
+                                value={values.newPostBody}
                                 id='newPostBody'
                                 name='newPostBody'
                                 onChange={handleChange}
-                                value={values.newPostBody}
-                                disabled={isDisabled} />
-                                <ErrorMessage className={s.error} name='newPostBody' component='div' />
-                        </div>
-                        <CustomButton
-                            isDisabled={isDisabled}
-                            btnClassName={s.btnStyle}
-                            wrapClassName={s.wrapperStyle}
-                            text={'Send'} />
-                    </Form>
-                </DivWrapper>
+                                disabled={isDisabled}
+                                fullWidth
+                            />
+                        <Divider variant='fullWidth' />
+                        <Button
+                            disabled={isDisabled}
+                            variant='contained'
+                            sx={{ width: '6rem' }}
+                            type='submit'
+                        >
+                            Send
+                        </Button>
+                    </StyledStack>
+                )
         }
     </Formik>
 });

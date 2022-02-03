@@ -1,109 +1,140 @@
-import React from 'react';
-import {Field, withFormik} from 'formik';
-import CustomButton from '../../../../common/buttons/submit/custom-button';
-import WarningField from '../../../../common/warning-field';
-import DivWrapper from '../../../../common/finished-components/div-wrapper';
-// import {validateTextFieldCreator} from '../../../../common/validators';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import { styled, alpha } from '@mui/material/styles';
+import {
+    Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, Stack, TextField, Typography
+} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { saveUserInfoFormData } from '../../../../../redux/profile-reducer';
 
 import s from '../UserAbout.module.sass';
 
-const checkbox = `${s.statusInput} ${s.checkbox}`;
+const StyledStack = styled(Stack)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: '3rem',
+    borderRadius: '5px',
+}));
 
-const DataForm = React.memo(({onEscapeSetEditModeFalse, setIsEditMode, contacts,
-    values, touched, errors, handleChange, handleBlur, handleSubmit}) => {
+const DataForm = React.memo(({ changeEditMode }) => {
 
-    return <form onSubmit={handleSubmit} onKeyDown={(e) => onEscapeSetEditModeFalse(e)}>
-        <DivWrapper className={s.userInfoForm}>
-    {/* return <form className={s.userInfoForm} onSubmit={handleSubmit} onKeyDown={(e) => onEscapeSetEditModeFalse(e)}> */}
-        <h3 className={s.user__title}>User about</h3>
-        <div className={s.user__description}>
-            <label name='fullName' className={s['user__item-about']}>Full name:</label>
-            <div>
-                <Field className={s.statusInput}
-                // validate={validateTextFieldCreator(50)}
+    const dispatch = useDispatch();
+    const {
+        userId, fullName, lookingForAJob, lookingForAJobDescription, aboutMe, contacts
+    } = useSelector((state) => state.profile);
+
+    const newContacts = {};
+    Object.keys(contacts).map(key => newContacts[key] = contacts[key] || '');
+
+    const formik = useFormik({
+        initialValues: {
+            fullName,
+            lookingForAJob,
+            lookingForAJobDescription,
+            aboutMe,
+            contacts: { ...newContacts },
+        },
+        onSubmit: (values) => {
+            dispatch(saveUserInfoFormData({ ...values, userId }));
+            changeEditMode(false);
+        },
+    });
+
+    const { handleSubmit, handleChange, handleBlur, values } = formik;
+
+    const [isContactsOpen, setOpenedContacts] = useState(false);
+
+    // const [expanded, setExpanded] = React.useState<string | false>(false);
+
+    // const handleChange =
+    // (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    //   setExpanded(isExpanded ? panel : false);
+    // };
+    const handleChangeAccordion = (panel) => (event, isExpanded) => {
+        setOpenedContacts(isExpanded ? panel : false);
+    };
+
+    return (
+        <StyledStack spacing={2} component='form' onSubmit={handleSubmit}>
+            <TextField
+                label='Full name'
+                value={values.fullName || ''}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 name='fullName'
                 id='fullName'
+            />
+            <FormControlLabel
+                control={<Checkbox name='lookingForAJob' checked={values.lookingForAJob} onChange={handleChange} />}
+                label={<label name='lookingForAJob'>
+                    Looking for a job?
+                </label>}
+            />
+            <TextField
+                multiline
+                label='My skills'
+                value={values.lookingForAJobDescription || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.fullName || ''} ></Field>
-                {errors.fullName && touched.fullName && <div id="feedback">{errors.fullName}</div>}
-            </div>
-            <label name='lookingForAJob' className={s['user__item-about']}>Looking for a job?</label>
-            <Field className={checkbox}
-                type='checkbox'
-                name='lookingForAJob' ></Field>
-            <label name='lookingForAJobDescription' className={s['user__item-about']}>My skills:</label>
-            <div>
-                <Field className={s.statusInput}
-                // validate={validateTextFieldCreator(50)}
-                name='lookingForAJobDescription'
-                id='lookingForAJobDescription'
+                name='skills'
+                id='skills'
+            />
+            <TextField
+                multiline
+                label='About me:'
+                value={values.aboutMe || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.lookingForAJobDescription || ''} ></Field>
-                {errors.lookingForAJobDescription && touched.lookingForAJobDescription
-                    && <div id="feedback">{errors.lookingForAJobDescription}</div>}
-            </div>
-            <label name='aboutMe' className={s['user__item-about']}>About me:</label>
-            <div>
-                <Field className={s.statusInput}
-                // validate={validateTextFieldCreator(50)}
                 name='aboutMe'
                 id='aboutMe'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.aboutMe || ''} ></Field>
-                {errors.aboutMe && touched.aboutMe && <div id="feedback">{errors.aboutMe}</div>}
-            </div>
-            {Object.keys(contacts).map(key => <FormContactField key={key}
-                contactKey={key}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                value={values.contacts[key]}
-                touched={touched}
-                errors={errors} />)}
-            {errors.responseWarning && <WarningField className={s.requestResponse} filedStyle={s.filedStyle}>
-                {errors.responseWarning}
-            </WarningField>}
-        <CustomButton wrapClassName={s.cancelWrapperStyle}
-            type='button' callbackOnClick={() => setIsEditMode(false)}>Cancel</CustomButton>
-        <CustomButton wrapClassName={s.saveWrapperStyle} type='submit'>Save</CustomButton>
-        </div>
-        </DivWrapper>
-    </form>
+            />
+            {
+                <Accordion
+                    expanded={isContactsOpen === 'contacts'}
+                    onChange={handleChangeAccordion('contacts')}
+                    sx={{
+                        background: 'none',
+                        '&:before': {
+                            display: 'none',
+                        },
+                        boxShadow: 'none',
+                    }}
+                >
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="contacts-content"
+                        id="contacts-header"
+                        sx={{ maxWidth: '8rem', p: 0 }}
+                    >
+                        <Typography>My contacts</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 0 }}>
+                        {
+                            Object.keys(contacts).map(key => <TextField
+                                key={key}
+                                id={key}
+                                value={values.contacts[key]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                label={`${key}: `}
+                                name={`contacts.${key}`}
+                                fullWidth
+                                sx={{ my: 1 }}
+                            />)
+                        }
+                    </AccordionDetails>
+              </Accordion>
+            }
+            <Stack direction='row' justifyContent='flex-start' spacing={2}>
+                <Button variant='contained' sx={{ width: '10rem' }} type='submit' >
+                    Save
+                </Button>
+                <Button variant='outlined' onClick={changeEditMode}>
+                    Cancel
+                </Button>
+            </Stack>
+        </StyledStack>
+    )
 });
 
-const FormContactField = React.memo(({contactKey, handleChange, handleBlur, value, errors, touched}) => {
-    return <>
-        <label name={contactKey} className={s['user__item-about']}>{`${contactKey}: `}</label>
-        <div>
-            <Field className={s.statusInput}
-            // validate={validateTextFieldCreator(50)}
-            name={`contacts.${contactKey}`}
-            placeholder={contactKey}
-            id={contactKey}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={value} ></Field>
-            {errors.aboutMe && touched.aboutMe && <div id="feedback">{errors.aboutMe}</div>}
-        </div>
-    </>
-});
-
-const ProfileDataForm = withFormik({
-    mapPropsToValues: ({fullName, lookingForAJob, lookingForAJobDescription, aboutMe, contacts}) => {
-        const newContacts = {};
-        Object.keys(contacts).map(key => newContacts[key] = contacts[key] || '');
-        return ({fullName,
-                lookingForAJob,
-                lookingForAJobDescription,
-                aboutMe,
-                contacts: {...newContacts}})
-    },
-    handleSubmit: (values, {setErrors, props: {saveUserInfoFormDataWithId}}) => {
-        saveUserInfoFormDataWithId(values, setErrors);
-    },
-    displayName: 'UserInfoForm'
-})(DataForm);
-
-export default ProfileDataForm;
+export default DataForm;

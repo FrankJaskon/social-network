@@ -6,7 +6,8 @@ import s from './MyPosts.module.sass';
 
 const MyPosts = (props) => {
     const {userId, isAuth, isMyPage, postsData, newPostBody, placeholderText, addPost} = props;
-    return <div className={s['my-posts']}>
+    return (
+        <>
             <CreatePost
                 userId={userId}
                 newPostBody={newPostBody}
@@ -14,12 +15,14 @@ const MyPosts = (props) => {
                 addPost={addPost}
                 isAuth={isAuth}
                 isMyPage={isMyPage} />
-            <div className={s.posts}>
-                <Posts
-                    postsData={postsData}
-                    userId={userId} />
-            </div>
-        </div>
+            {
+                postsData.length > 0
+                && <div className={s.posts}>
+                    <Posts />
+                </div>
+            }
+        </>
+    )
 }
 
 export default MyPosts;

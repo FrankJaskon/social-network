@@ -3,7 +3,11 @@ import preloAder from '../../../assets/images/spinner.svg';
 
 import s from './Preloader.module.sass';
 
-const Preloader = ({preloaderClass}) => {
+interface PreloaderPropsType {
+    preloaderClass?: string
+}
+
+const Preloader = ({ preloaderClass }: PreloaderPropsType) => {
     const wrapperClass = `${s.preloader} ${preloaderClass}`;
     return (
         <div className={wrapperClass}>
