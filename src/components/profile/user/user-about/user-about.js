@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useSelector } from 'react-redux';
 import CustomButton from '../../../common/buttons/submit';
 import {stopChangingOnEscape} from '../../../common/helpers';
 import ProfileData from './profile-data';
@@ -8,8 +9,13 @@ import s from './UserAbout.module.sass';
 
 const UserAbout = (props) => {
 
-    const {isMyPage, saveUserInfoFormData, setIsSuccessResponse,
-        isSuccessResponse, lookingForAJob, lookingForAJobDescription} = props;
+    const {
+        saveUserInfoFormData, setIsSuccessResponse,
+        isSuccessResponse, lookingForAJob, lookingForAJobDescription
+    } = props;
+
+    const { userId: pageId } = useSelector((state) => state.profile);
+    const { userId } = useSelector((state) => state.auth);
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -34,7 +40,7 @@ const UserAbout = (props) => {
                     lookingForAJobDescription={lookingForAJobDescription}
                     setIsEditMode={setIsEditMode}
                     title='Professional info'>
-                        {isMyPage && <CustomButton text='Change data'
+                        {userId === pageId && <CustomButton text='Change data'
                             wrapClassName={s.wrapperStyle}
                             callbackOnClick={() => setIsEditMode(true)} />}
                 </ProfileData>

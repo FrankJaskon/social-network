@@ -3,7 +3,6 @@ import UserAbout from './user-about';
 import ProfileData from './user-about/profile-data';
 import UserNameWithStatus from './user-about/user-name-with-status';
 import UserImg from './user-img';
-import ModalAvatar from './user-img/modal-avatar';
 
 import s from './User.module.sass';
 
@@ -14,7 +13,10 @@ const User = ({setIsSuccessResponse, isSuccessResponse, setResponseWarning, save
     return (
         <div className={s.user}>
             <div className={s.userHeader}>
-                <ModalAvatar />
+                <UserImg
+                    src={photo}
+                    isMyPage={isMyPage}
+                    saveNewUserPhoto={saveNewUserPhoto} />
                 <div className={s.infoPartOfUserHeader}>
                     <UserNameWithStatus fullName={fullName} setResponseWarning={setResponseWarning} />
                     <ProfileData aboutMe={aboutMe}

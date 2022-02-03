@@ -1,2 +1,2 @@
-import ProfileContainer from './profileWithHooks';
-export default ProfileContainer;
+import Profile from './profile';
+export default Profile;

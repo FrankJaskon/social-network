@@ -7,32 +7,38 @@ const ADD_POST = 'unfriendly-network/profile/ADD-POST',
       SET_IS_PROFILE_LOADED = 'unfriendly-network/profile/SET-IS-PROFILE-LOADED',
       SET_IS_STATUS_LOADED = 'unfriendly-network/profile/SET-IS-STATUS-LOADED',
       SET_LOADING_ERROR = 'unfriendly-network/profile/SET-LOADING-ERROR',
-      SET_IS_SUCCESS_RESPONSE = 'unfriendly-network/profile/SET-IS-SUCCESS-RESPONSE';
+      SET_IS_SUCCESS_RESPONSE = 'unfriendly-network/profile/SET-IS-SUCCESS-RESPONSE',
+      SET_FOLLOWED = 'unfriendly-network/profile/SET-FOLLOWED',
+      REMOVE_USER_DATA = 'unfriendly-network/profile/REMOVE-USER-DATA';
 
 const initialState = {
-    status: '',
-    aboutMe: '',
-    contacts: {},
-    lookingForAJob: false,
-    lookingForAJobDescription: '',
-    fullName: '',
-    userId: '',
+    status: null as null | string,
+    aboutMe: null as null | string,
+    contacts: {} as any,
+    lookingForAJob: false as boolean,
+    lookingForAJobDescription: null as null | string,
+    fullName: null as null | string,
+    userId: null as null | number,
     photos: {
-        small: '',
-        large: ''
+        small: {} as any,
+        large: {} as any,
     },
-    postsData: [],
-    placeholderText: 'Enter your message',
-    isProfileLoaded: false,
-    isStatusLoaded: false,
+    postsData: [] as any[],
+    newPostBody: null as null | string,
+    placeholderText: 'Enter your message' as string,
+    isProfileLoaded: false as boolean,
+    isStatusLoaded: false as boolean,
     loadingError: {
-        code: '',
-        message: ''
+        code: null as null | string,
+        message: null as null | string,
     },
-    isSuccessResponse: false
+    isSuccessResponse: false as boolean,
+    followed: false as boolean,
 };
 
-const profileReducer = (state = initialState, action) => {
+type InitialStateType = typeof initialState;
+
+const profileReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
     const type = action.type;
 
     switch(type) {
@@ -59,6 +65,8 @@ const profileReducer = (state = initialState, action) => {
         case SET_IS_PROFILE_LOADED:
         case SET_IS_STATUS_LOADED:
         case SET_IS_SUCCESS_RESPONSE:
+        case SET_FOLLOWED:
+        case REMOVE_USER_DATA:
             return {
                 ...state,
                 ...action.payload
@@ -73,27 +81,40 @@ const profileReducer = (state = initialState, action) => {
     }
 }
 
-export const setProfile = ({status, aboutMe, contacts, lookingForAJob,
-    lookingForAJobDescription, fullName, userId, photos, error}) => (
-        {type: SET_USER_PROFILE, payload: {status, aboutMe, contacts, error,
-            lookingForAJob, lookingForAJobDescription, fullName, userId, photos}}
-    );
-export const addPost = (body, pageId) => ({type: ADD_POST, newPostBody: body, pageId});
-export const changeUserStatus = (status) => ({type: SET_PROFILE_STATUS, payload: {status}});
-export const setIsProfileLoaded = (isProfileLoaded) => ({type: SET_IS_PROFILE_LOADED, payload: {isProfileLoaded}});
-export const setIsStatusLoaded = (isStatusLoaded) => ({type: SET_IS_STATUS_LOADED, payload: {isStatusLoaded}});
-export const setLoadingError = (code, message) => ({type: SET_LOADING_ERROR, payload: {code, message}});
-export const setIsSuccessResponse = (isSuccessResponse) => ({type: SET_IS_SUCCESS_RESPONSE, payload: {isSuccessResponse}});
+export const setProfile = ({
+    status, aboutMe, contacts, lookingForAJob,
+    lookingForAJobDescription, fullName, userId, photos, error
+}: any) => (
+    {
+        type: SET_USER_PROFILE,
+        payload: {
+            status, aboutMe, contacts, error,
+            lookingForAJob, lookingForAJobDescription,
+            fullName, userId, photos
+        }
+    }
+);
 
-export const showUserPage = userId => async dispatch => {
+export const addPost = (body: any, pageId: any) => ({type: ADD_POST, newPostBody: body, pageId});
+export const changeUserStatus = (status: string) => ({type: SET_PROFILE_STATUS, payload: {status}});
+export const setIsProfileLoaded = (isProfileLoaded: boolean) => ({type: SET_IS_PROFILE_LOADED, payload: {isProfileLoaded}});
+export const setIsStatusLoaded = (isStatusLoaded: boolean) => ({type: SET_IS_STATUS_LOADED, payload: {isStatusLoaded}});
+export const setLoadingError = (code: string, message: string) => ({type: SET_LOADING_ERROR, payload: {code, message}});
+export const setIsSuccessResponse = (isSuccessResponse: boolean) => ({type: SET_IS_SUCCESS_RESPONSE, payload: {isSuccessResponse}});
+export const setFollowed = (followed: boolean) => ({ type: SET_FOLLOWED, payload: { followed } });
+export const removeUserData = () => ({ type: REMOVE_USER_DATA, payload: initialState });
+
+export const showUserPage = (userId: number | null) => async (dispatch: any) => {
     dispatch(setIsProfileLoaded(false));
     dispatch(setIsStatusLoaded(false));
     dispatch(setLoadingError('', ''));
     try {
         const data = await getPage(`profile/${userId}`);
         dispatch(setProfile(data));
+        const followed = await getPage(`follow/${userId}`);
+        dispatch(setFollowed(followed));
     } catch({response: {status, data: {message}}}) {
-        dispatch(setLoadingError(status, message));
+        dispatch(setLoadingError(status as any, message as any));
     }
     await dispatch(setIsProfileLoaded(true));
     const data = await getPage(`profile/status/${userId}`)
@@ -101,14 +122,14 @@ export const showUserPage = userId => async dispatch => {
         dispatch(setIsStatusLoaded(true));
 }
 
-export const applyNewStatus = body => async dispatch => {
+export const applyNewStatus = (body: any) => async (dispatch: any) => {
     const {resultCode, messages} = await putData(`profile/status/`, {status: body});
     if (!resultCode) {
         dispatch(changeUserStatus(body));
     } else dispatch(setResponseWarning(`Some error: ${messages[0]}`));
 }
 
-export const saveUserInfoFormData = (data, setErrors) => async (dispatch, getState) => {
+export const saveUserInfoFormData = (data: any, setErrors: any) => async (dispatch: any, getState: any) => {
     const id = getState().auth.id;
     const {resultCode, messages} = await putData(`profile`, data);
     if (!resultCode) {
@@ -117,7 +138,7 @@ export const saveUserInfoFormData = (data, setErrors) => async (dispatch, getSta
     } else setErrors({responseWarning: `Some error:${messages.join(' ')}`});
 }
 
-export const saveNewUserPhoto = file => async (dispatch, getState) => {
+export const saveNewUserPhoto = (file: any) => async (dispatch: any, getState: any) => {
     const id = getState().auth.id;
     const {resultCode, messages} = await profileAPI.updateUserImg('/profile/photo', file);
     if (!resultCode) {

@@ -1,19 +1,5 @@
 .app
-    width: 80vmax
-    height: 100vh
-    margin: 0 auto
-    overflow: hidden
-    .wrapper
-        display: grid
-        grid-template-columns: 1fr 5fr
-        padding: 0 1.25rem .625rem 1.25rem
-        font-family: 'Lato', sans-serif
 .app-wrapper-content
-    // height: calc(100vmin - 50px - 2 * .65rem)
-    overflow: hidden
-    color: #47525E
-    &::-webkit-scrollbar
-        width: 0
 .preloader
     width: 100vw
     height: 100vh
@@ -23,16 +9,3 @@
 @media (max-width: 450px)
     .warningField
         margin: 0 0 .5rem .5rem
-@media (max-width: 768px)
-    .app
-        width: 100%
-        margin: 0
-        padding: 0
-        overflow: hidden
-        .wrapper
-            display: grid
-            grid: 50px auto / minmax(55px, auto) 5fr;
-            gap: .5rem 0
-            padding: 0
-            .app-wrapper-content
-                // height: calc(100vmax - 50px - 2 * .65rem)

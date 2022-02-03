@@ -1,8 +1,8 @@
 import Dialogs from './dialogs';
-import {addMessage} from '../../redux/dialogs-reducer';
-import {connect} from 'react-redux';
-import HOC from '../common/hoc';
-import {compose} from 'redux';
+import { addMessage } from '../../redux/dialogs-reducer';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { redirectToAuth } from '../common/hoc/newHoc';
 
 
 const mapStateToProps = ({auth: {isAuth}, dialogs}) => {
@@ -15,6 +15,6 @@ const mapStateToProps = ({auth: {isAuth}, dialogs}) => {
 
 export default compose(
     connect(mapStateToProps, {addMessage}),
-    HOC.redirectAuthWrapperComponent.bind(HOC)
+    redirectToAuth,
 )(Dialogs);
 
