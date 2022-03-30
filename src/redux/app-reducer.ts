@@ -6,7 +6,7 @@ const SET_INITIALIZATION: 'unfriendly-network/app/SET-INITIALIZATION' = 'unfrien
     TOGGLE_THEME: 'unfriendly-network/TOGGLE-THEME' = 'unfriendly-network/TOGGLE-THEME';
 
 const initialState = {
-    initialized: false,
+    initialized: true,
     responseWarning: null as null | string,
     timerId: null as null | number,
     isLightTheme: true,

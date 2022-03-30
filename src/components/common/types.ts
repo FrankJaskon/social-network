@@ -1,3 +1,8 @@
-const any = {};
+export interface DialogDataType {
+    id: number
+    name: string
+}
 
-export default any;
+export interface MessageDataType extends DialogDataType {
+    text: string
+}

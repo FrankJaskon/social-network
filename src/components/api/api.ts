@@ -3,7 +3,7 @@ import axios from 'axios';
 const requestPattern = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0/',
     withCredentials: true,
-    headers: {'API-KEY': 'f8e1a50a-a804-47c5-b709-d1554c611319'}
+    headers: {'API-KEY': 'f8e1a50a-a804-47c5-b709-d1554c611319'},
 });
 
 export const postData = async (URL: string, body = {}) => {

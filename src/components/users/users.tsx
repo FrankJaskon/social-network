@@ -14,7 +14,6 @@ import { Container, Pagination, Stack, Typography, Box, List, Divider, Tab, Tabs
 import BreadcrumbsWithHomeIcon from '../common/breadcrumb';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { styled, alpha } from '@mui/material/styles';
-
 import SearchInput from '../common/search-input';
 import ChatWrapper from '../common/chat-wrapper';
 interface UserListProps {
@@ -95,7 +94,7 @@ const TabWrapper = styled(Tab)(({ theme }) => ({
 const Users = () => {
     const dispatch = useDispatch();
 
-    const { usersList, currentPage, isFetching, friend } = useSelector((state: RootStateType) => state.users);
+    const { usersList, currentPage, isFetching, friend, term } = useSelector((state: RootStateType) => state.users);
 	const { isAuth } = useSelector((state: RootStateType) => state.auth);
 
     const [activeTab, setActiveTab] = React.useState('Users');
@@ -107,13 +106,13 @@ const Users = () => {
         } else {
             dispatch(setSearchParams(undefined, undefined));
         }
-        dispatch(showUsers(1));
+        dispatch(showUsers());
     };
 
     const handleSearchChange = (event: any) => {
         const term = event.target.value;
         dispatch(setSearchParams(term, friend));
-        dispatch(showUsers(1));
+        dispatch(showUsers());
     }
 
     useEffect((): any => {
@@ -124,7 +123,7 @@ const Users = () => {
         };
     }, []);
 
-    const getIsDisabledSearch = () => usersList.length < 2 ? true : false;
+    // const getIsDisabledSearch = () => usersList.length && usersList.length < 2 ? true : false;
 
     return (
         <Container>
@@ -139,7 +138,7 @@ const Users = () => {
                             <SearchInput
                                 placeholder='Search from users'
                                 onSubmit={handleSearchChange}
-                                disabled={getIsDisabledSearch()}
+                                // disabled={getIsDisabledSearch()}
                             />
                         </Stack>
                     </Stack>

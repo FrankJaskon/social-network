@@ -26,6 +26,7 @@ const routes = [
 		title: 'Dialogs'
   	},
 	{
+
 		path: '/settings',
 		title: 'Settings'
   	},
@@ -49,8 +50,10 @@ const BreadcrumbsWithHomeIcon = (props: any) => {
 				color='inherit'
 				href='/'
 			>
-				<HomeIcon sx={{ mr: 0.5 }} fontSize='inherit' color='primary' />
-				<Typography color='primary'>Home</Typography>
+			<HomeIcon sx={{ mr: 0.5 }} fontSize='inherit' color='primary' />
+			<Typography color='primary'>
+				Home
+			</Typography>
 			</Link>
 			{routes.map(({ path, title }) => {
 				switch(pathname) {

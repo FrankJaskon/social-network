@@ -63,9 +63,9 @@ const SearchInput = ({ placeholder, onSubmit, ...rest }: SearchInputProps) => {
         setSearchFieldValue(event.target.value);
     };
 
-    const clearField = (event: any) => {
-        setSearchFieldValue('');
-    }
+    // const clearField = (event: any) => {
+    //     setSearchFieldValue('');
+    // }
 
     const sendSearchValue = (event: any) => {
         if (event.key === 'Enter') {
@@ -84,7 +84,7 @@ const SearchInput = ({ placeholder, onSubmit, ...rest }: SearchInputProps) => {
                 onChange={handleSearchChange}
                 value={searchFieldValue}
                 onKeyDown={sendSearchValue}
-                onBlur={clearField}
+                // onBlur={clearField}
                 {...rest}
             />
         </Search>

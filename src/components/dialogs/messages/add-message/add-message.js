@@ -1,42 +1,41 @@
 import React from 'react';
 import CustomButton from '../../../common/buttons/submit';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
+import { styled, alpha } from '@mui/material/styles';
 import {validateTextFieldCreator} from '../../../common/validators';
+import { Box, Button, Stack, Typography } from '@mui/material';
 
 import s from './AddMessage.module.sass';
 
 const validateTextField = validateTextFieldCreator(50);
 
-const AddMessage = ({placeholder, addMessage}) => {
-    return <Formik
-        initialValues={{newMessageBody: ''}}
-        onSubmit={({newMessageBody}, actions) => {
-                addMessage(newMessageBody);
-                actions.resetForm();
-        }} >
-        {
-            ({values,
-                errors,
-                touched,
-                handleChange,
-                handleSubmit}) => <Form className={s.wrapper} onSubmit={handleSubmit} >
-                    <div className={s.input__wrapper}
-                        style={errors.newMessageBody && touched.newMessageBody ? {border: '2px solid #ff0000'} : {}} >
-                        <Field
-                            validate={validateTextField}
-                            className={s.input}
-                            type='textarea'
-                            placeholder={placeholder}
-                            id='newMessageBody'
-                            name='newMessageBody'
-                            onChange={handleChange}
-                            value={values.newMessageBody} />
-                        <ErrorMessage className={s.error} name='newMessageBody' component='div' />
-                    </div>
-                    <CustomButton text={'Send'} />
-                </Form>
-        }
-    </Formik>
+const StyledStack = styled(Stack)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    height: '55px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '.5rem',
+}));
+
+const StyledTextField = styled(Typography)(({ theme }) => ({
+    backgroundColor: theme.palette.action.selected,
+    height: '40px',
+    padding: '.5rem 1rem',
+    margin: '2px',
+    borderRadius: '.5rem',
+    flexGrow: 1,
+}));
+
+const AddMessage = () => {
+    return (
+        <StyledStack>
+            <StyledTextField variant='body2'>
+                SomeTextField
+            </StyledTextField>
+            <Button variant='contained'>Submit</Button>
+        </StyledStack>
+    )
 }
 
 export default AddMessage;
