@@ -27,7 +27,7 @@ const DialogMessages = () => {
     return (
         <>
             {
-                activeDialogId
+                activeDialogId !== undefined
                 ? <StyledStack spacing={1}>
                     <OpenedMessage isMyId={isMyId} />
                     <OpenedMessage />

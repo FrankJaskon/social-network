@@ -10,7 +10,7 @@ import { getResponseWarning } from '../../redux/app-selectors';
 import { getLoadingError } from '../../redux/profile-selectors';
 import { showUsers, clearUserPage, setSearchParams, removeSearchParams } from '../../redux/users-reducer';
 import { RootStateType } from '../../redux/redux-store';
-import { Container, Pagination, Stack, Typography, Box, List, Divider, Tab, Tabs } from '@mui/material';
+import { Container, Pagination, Stack, Typography, Box, List, Divider, Tab, Tabs, InputBase } from '@mui/material';
 import BreadcrumbsWithHomeIcon from '../common/breadcrumb';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { styled, alpha } from '@mui/material/styles';
@@ -91,6 +91,23 @@ const TabWrapper = styled(Tab)(({ theme }) => ({
     }
 }));
 
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    // color: 'inherit',
+    '& .MuiInputBase-input': {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '36ch',
+            '&:focus': {
+            width: '60ch',
+            },
+        },
+    },
+}));
+
 const Users = () => {
     const dispatch = useDispatch();
 
@@ -138,6 +155,7 @@ const Users = () => {
                             <SearchInput
                                 placeholder='Search from users'
                                 onSubmit={handleSearchChange}
+                                StyledComponent={StyledInputBase}
                                 // disabled={getIsDisabledSearch()}
                             />
                         </Stack>

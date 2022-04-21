@@ -16,7 +16,7 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
+        // marginLeft: theme.spacing(1),
         width: 'auto',
     },
 }));
@@ -31,31 +31,15 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    // color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: '36ch',
-            '&:focus': {
-            width: '60ch',
-            },
-        },
-    },
-}));
-
 interface SearchInputProps extends InputBaseProps {
     placeholder: string
     onSubmit: (value: any) => void
+    StyledComponent: any
 }
 
-const SearchInput = ({ placeholder, onSubmit, ...rest }: SearchInputProps) => {
+const SearchInput = ({ placeholder, onSubmit, StyledComponent, ...rest }: SearchInputProps) => {
 
-    const { isLightTheme } = useSelector((state: RootStateType) => state.app);
+    // const { isLightTheme } = useSelector((state: RootStateType) => state.app);
 
     const [searchFieldValue, setSearchFieldValue] = React.useState('');
 
@@ -78,7 +62,7 @@ const SearchInput = ({ placeholder, onSubmit, ...rest }: SearchInputProps) => {
             <SearchIconWrapper>
                 <SearchIcon color='primary'/>
             </SearchIconWrapper>
-            <StyledInputBase
+            <StyledComponent
                 placeholder={placeholder}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={handleSearchChange}
